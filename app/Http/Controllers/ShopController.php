@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -46,7 +47,12 @@ class ShopController extends Controller
      */
     public function show(Shop $shop)
     {
-        //
+        $shop = $shop->with('products')->where('id', $shop->id)->first();
+        if (Auth::user()->id == $shop->user_id) {
+
+            return view('shops.myshop', compact('shop'));
+        }
+        return view('shops.show', compact('shop'));
     }
 
     /**

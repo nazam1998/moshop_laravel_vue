@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-form :action="'profile/' + profile.id" method="POST">
-      <v-text-field type="hidden" name="_method" value="PUT"></v-text-field>
-      <v-text-field type="hidden" name="_token" :value="csrf"></v-text-field>
+      <input type="hidden" name="_method" value="PUT"/>
+      <input type="hidden" name="_token" :value="csrf"/>
       <v-container>
         <v-row>
           <v-col cols="12" md="6">

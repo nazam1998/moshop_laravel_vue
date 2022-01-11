@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Shop;
 /*
@@ -24,6 +28,12 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::put('/profile/{profile}/picture', [ProfileController::class, 'updatePicture'])->middleware(['auth']);
+Route::get('/cart/confirm', [CartController::class, 'confirm'])->middleware(['auth']);
+Route::post('/cart/{id}', [CartController::class, 'add'])->middleware(['auth']);
 
+Route::resource('order', OrderController::class)->middleware(['auth']);
 Route::resource('profile', ProfileController::class)->middleware(['auth']);
+Route::resource('shop', ShopController::class)->middleware(['auth']);
+Route::resource('product', ProductController::class)->middleware(['auth']);
+Route::resource('cart', CartController::class)->middleware(['auth']);
 require __DIR__ . '/auth.php';

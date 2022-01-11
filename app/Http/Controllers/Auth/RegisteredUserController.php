@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -66,6 +67,11 @@ class RegisteredUserController extends Controller
         $shop->user_id = $user->id;
         $shop->name = "Shop de " . $profile->firstname . ' ' . $profile->lastname;
         $shop->save();
+
+        // Create a cart for the user
+        $cart = new Cart();
+        $cart->user_id = $user->id;
+        $cart->save();
 
         event(new Registered($user));
 

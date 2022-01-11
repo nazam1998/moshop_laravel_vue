@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\CartDetail;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -14,72 +20,58 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        $cart = Auth::user()->cart;
+        $cartdetails = CartDetail::where('cart_id', $cart->id)->with('product')->get();
+        return view('cart.index', compact('cartdetails'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function add(Request $request, $id)
     {
-        //
+        $cart = Auth::user()->cart;
+        if (CartDetail::where('cart_id', $cart->id)->where('product_id', $id)->count() > 0) {
+            $cartdetail = CartDetail::where('cart_id', $cart->id)->where('product_id', $id)->first();
+            $cartdetail->quantity += $request->quantity;
+            $cartdetail->save();
+        } else {
+            $cartdetail = new CartDetail();
+
+            $cartdetail->quantity = $request->quantity;
+            $cartdetail->cart_id = $cart->id;
+            $cartdetail->product_id = $id;
+            $cartdetail->save();
+        }
+        $product = Product::find($id);
+        $product->stock -= $request->quantity;
+        $product->save();
+
+        return redirect()->back();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function confirm()
     {
-        //
-    }
+        $cart = Auth::user()->cart;
+        $order = new Order();
+        $totalPrice = 0;
+        foreach ($cart->cartDetails as $details) {
+            $totalPrice += $details->quantity;
+        }
+        $order->user_id = Auth::id();
+        $order->price = $totalPrice;
+        $order->date = Carbon::now();
+        $order->save();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cart $cart)
-    {
-        //
-    }
+        foreach ($cart->cartDetails as $details) {
+            $orderdetail = new OrderDetail();
+            $orderdetail->order_id = $order->id;
+            $orderdetail->cart_detail_id = $details->id;
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cart $cart)
-    {
-        //
-    }
+            $orderdetail->save();
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Cart $cart)
-    {
-        //
-    }
+        $cart->cartDetails()->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Cart $cart)
-    {
-        //
+        return redirect()->back();
     }
 }
