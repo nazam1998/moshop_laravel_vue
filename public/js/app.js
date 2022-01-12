@@ -5807,7 +5807,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Home",
   props: {
-    shop: Object
+    shop: Object,
+    user: [Number, Object]
   },
   components: {
     Product: _Product__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -6067,7 +6068,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Product",
   props: {
-    product: Object
+    product: Object,
+    user: [Number, Object]
   },
   data: function data() {
     return {
@@ -26118,7 +26120,7 @@ var render = function () {
           return _c(
             "v-col",
             { key: product.id, attrs: { cols: "4" } },
-            [_c("product", { attrs: { product: product } })],
+            [_c("product", { attrs: { product: product, user: _vm.user } })],
             1
           )
         }),
@@ -26601,57 +26603,61 @@ var render = function () {
           _vm._v(" "),
           _c("v-card-text", [_vm._v(_vm._s(_vm.product.description))]),
           _vm._v(" "),
-          _c(
-            "v-card-actions",
-            [
-              _vm.product.stock > 0
-                ? _c(
-                    "v-form",
-                    {
-                      attrs: {
-                        action: "/cart/" + _vm.product.id,
-                        method: "POST",
-                      },
-                    },
-                    [
-                      _c("input", {
-                        attrs: { type: "hidden", name: "_token" },
-                        domProps: { value: _vm.csrf },
-                      }),
-                      _vm._v(" "),
-                      _c("v-text-field", {
-                        attrs: {
-                          label: "Quantity",
-                          name: "quantity",
-                          min: "0",
-                          max: _vm.product.stock,
-                          type: "number",
-                        },
-                        model: {
-                          value: _vm.quantity,
-                          callback: function ($$v) {
-                            _vm.quantity = $$v
+          _vm.user
+            ? _c(
+                "v-card-actions",
+                [
+                  _vm.product.stock > 0
+                    ? _c(
+                        "v-form",
+                        {
+                          attrs: {
+                            action: "/cart/" + _vm.product.id,
+                            method: "POST",
                           },
-                          expression: "quantity",
                         },
-                      }),
-                      _vm._v(" "),
-                      _vm.quantity > 0
-                        ? _c(
-                            "v-btn",
-                            { attrs: { type: "submit", color: "secondary" } },
-                            [_vm._v("Add to cart")]
-                          )
-                        : _vm._e(),
-                    ],
-                    1
-                  )
-                : _c("v-btn", { attrs: { disabled: "" } }, [
-                    _vm._v("Out of stock"),
-                  ]),
-            ],
-            1
-          ),
+                        [
+                          _c("input", {
+                            attrs: { type: "hidden", name: "_token" },
+                            domProps: { value: _vm.csrf },
+                          }),
+                          _vm._v(" "),
+                          _c("v-text-field", {
+                            attrs: {
+                              label: "Quantity",
+                              name: "quantity",
+                              min: "0",
+                              max: _vm.product.stock,
+                              type: "number",
+                            },
+                            model: {
+                              value: _vm.quantity,
+                              callback: function ($$v) {
+                                _vm.quantity = $$v
+                              },
+                              expression: "quantity",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _vm.quantity > 0
+                            ? _c(
+                                "v-btn",
+                                {
+                                  attrs: { type: "submit", color: "secondary" },
+                                },
+                                [_vm._v("Add to cart")]
+                              )
+                            : _vm._e(),
+                        ],
+                        1
+                      )
+                    : _c("v-btn", { attrs: { disabled: "" } }, [
+                        _vm._v("Out of stock"),
+                      ]),
+                ],
+                1
+              )
+            : _vm._e(),
         ],
         1
       ),

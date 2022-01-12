@@ -25,7 +25,7 @@
                 <v-icon>list</v-icon>My Orders
             </v-btn>
             <v-btn href="/cart">
-                <v-icon>shopping</v-icon>My Cart<v-badge content="{{ Auth::user()->cart->cartDetails->count() }}"></v-badge>
+                <v-icon>shopping</v-icon>My Cart @if(Auth::user()->cart->cartDetails->count() >0)<v-badge class="mx-2" content="{{ Auth::user()->cart->cartDetails->count() }}"></v-badge>@endif
             </v-btn>
             <v-btn href="/shop/{{ Auth::user()->shop->id }}">
                 <v-icon>shopping-cart</v-icon>My Shop

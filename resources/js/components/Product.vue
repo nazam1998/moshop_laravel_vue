@@ -8,7 +8,7 @@
       />
       <v-card-title>{{ product.name }}</v-card-title>
       <v-card-text>{{ product.description }}</v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="user">
         <v-form :action="'/cart/' + product.id" method="POST" v-if="product.stock>0">
           <input type="hidden" name="_token" :value="csrf" />
           <v-text-field
@@ -31,6 +31,7 @@ export default {
   name: "Product",
   props: {
     product: Object,
+    user: [Number, Object]
   },
   data() {
     return {
