@@ -51,6 +51,21 @@ class CartController extends Controller
 
         return redirect()->back();
     }
+
+    public function remove($id)
+    {
+        $cartdetail = CartDetail::find($id);
+        $product = Product::find($cartdetail->product_id);
+        if ($product->shop->id == Auth::user()->shop->id) {
+            return redirect()->back();
+        }
+        $product->stock += $cartdetail->quantity;
+        $cartdetail->delete();
+        $product->save();
+
+        return redirect()->back();
+    }
+
     public function confirm()
     {
         $cart = Auth::user()->cart;

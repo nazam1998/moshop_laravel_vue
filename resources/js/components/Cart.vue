@@ -19,6 +19,21 @@
             >Total Price:
             {{ details.product.price * details.quantity }}€</v-card-text
           >
+          <v-card-actions>
+            <v-form :action="'/cart/' + details.id" method="POST">
+              <v-text-field
+                type="hidden"
+                name="_token"
+                :value="csrf"
+              ></v-text-field>
+              <v-text-field
+                type="hidden"
+                name="_method"
+                value="DELETE"
+              ></v-text-field>
+              <v-btn color="orange" type="submit">Remove from cart</v-btn>
+            </v-form>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -37,6 +52,13 @@ export default {
   name: "Cart",
   props: {
     cartdetails: [Object, Array],
+  },
+  data() {
+    return {
+      csrf: document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content"),
+    };
   },
 };
 </script>

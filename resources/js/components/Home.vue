@@ -5,7 +5,7 @@
 
     <v-row>
       <v-col cols="4" v-for="product in shop.products" :key="product.id">
-        <product :product="product" :user="user"></product>
+        <product :product="product" :user="user" :shop="shop"></product>
       </v-col>
     </v-row>
   </div>

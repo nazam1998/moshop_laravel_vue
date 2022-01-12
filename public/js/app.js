@@ -5565,10 +5565,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Cart",
   props: {
     cartdetails: [Object, Array]
+  },
+  data: function data() {
+    return {
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+    };
   }
 });
 
@@ -6065,10 +6085,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Product",
   props: {
     product: Object,
+    shop: Object,
     user: [Number, Object]
   },
   data: function data() {
@@ -25687,6 +25714,46 @@ var render = function () {
                         "€"
                     ),
                   ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c(
+                        "v-form",
+                        {
+                          attrs: {
+                            action: "/cart/" + details.id,
+                            method: "POST",
+                          },
+                        },
+                        [
+                          _c("v-text-field", {
+                            attrs: {
+                              type: "hidden",
+                              name: "_token",
+                              value: _vm.csrf,
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c("v-text-field", {
+                            attrs: {
+                              type: "hidden",
+                              name: "_method",
+                              value: "DELETE",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            { attrs: { color: "orange", type: "submit" } },
+                            [_vm._v("Remove from cart")]
+                          ),
+                        ],
+                        1
+                      ),
+                    ],
+                    1
+                  ),
                 ],
                 1
               ),
@@ -26120,7 +26187,11 @@ var render = function () {
           return _c(
             "v-col",
             { key: product.id, attrs: { cols: "4" } },
-            [_c("product", { attrs: { product: product, user: _vm.user } })],
+            [
+              _c("product", {
+                attrs: { product: product, user: _vm.user, shop: _vm.shop },
+              }),
+            ],
             1
           )
         }),
@@ -26603,7 +26674,7 @@ var render = function () {
           _vm._v(" "),
           _c("v-card-text", [_vm._v(_vm._s(_vm.product.description))]),
           _vm._v(" "),
-          _vm.user
+          _vm.user && _vm.shop.user_id !== _vm.user
             ? _c(
                 "v-card-actions",
                 [
