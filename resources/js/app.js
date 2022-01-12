@@ -20,6 +20,8 @@ Vue.component('add-product', require('./components/AddProduct.vue').default);
 Vue.component('edit-product', require('./components/EditProduct.vue').default);
 Vue.component('cart', require('./components/Cart.vue').default);
 Vue.component('orders', require('./components/Orders.vue').default);
+Vue.component('order', require('./components/Order.vue').default);
+Vue.component('shops', require('./components/Shops.vue').default);
 
 const app = new Vue({
     el: '#app',

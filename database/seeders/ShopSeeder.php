@@ -17,12 +17,19 @@ class ShopSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::inRandomOrder()->first();
-        $profile = Profile::where('user_id', $user->id)->first();
-        DB::table('shops')->insert([
-            'name' => 'Shop de ' . $profile->firstname . ' ' . $profile->lastname,
-            'user_id' => $user->id,
-            'public' => true
-        ]);
+        $users = User::all();
+        foreach ($users as $index=>$user){
+            if($index >0){
+                $public = false;
+            }else{
+                $public = true;
+            }
+            $profile = Profile::where('user_id', $user->id)->first();
+            DB::table('shops')->insert([
+                'name' => 'Shop de ' . $profile->firstname . ' ' . $profile->lastname,
+                'user_id' => $user->id,
+                'public' => $public
+            ]);
+        }
     }
 }

@@ -14,13 +14,15 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
+        $shop = Shop::inRandomOrder()->withCount('products')->get();
+        $shop = $shop->where('products_count', '<', 10)->first();
         return [
             'name' => $this->faker->name(),
             'description' => $this->faker->realText(),
             'cover_path' => 'mockup.jpg',
             'price' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 5000),
             'stock' => $this->faker->randomDigitNotNull(),
-            'shop_id' => Shop::inRandomOrder()->first()->id
+            'shop_id' => $shop->id
         ];
     }
 }

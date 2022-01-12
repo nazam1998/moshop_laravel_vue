@@ -77,6 +77,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        if($product->shop->id != Auth::user()->shop->id){
+            return redirect()->back();
+        }
         return view('products.edit', compact('product'));
     }
 
@@ -89,6 +92,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        if($product->shop->id != Auth::user()->shop->id){
+            return redirect()->back();
+        }
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:300'],
@@ -121,6 +127,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if($product->shop->id != Auth::user()->shop->id){
+            return redirect()->back();
+        }
         $product->delete();
         return redirect()->back();
     }

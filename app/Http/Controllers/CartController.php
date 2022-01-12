@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
 use App\Models\CartDetail;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -29,6 +28,11 @@ class CartController extends Controller
 
     public function add(Request $request, $id)
     {
+        $product = Product::find($id);
+        if ($product->shop->id == Auth::user()->shop->id) {
+            return redirect()->back();
+        }
+        $request->validate(['quantity' => ['required', 'numeric', 'min:1', 'max:' . $product->stock]]);
         $cart = Auth::user()->cart;
         if (CartDetail::where('cart_id', $cart->id)->where('product_id', $id)->count() > 0) {
             $cartdetail = CartDetail::where('cart_id', $cart->id)->where('product_id', $id)->first();
@@ -42,21 +46,20 @@ class CartController extends Controller
             $cartdetail->product_id = $id;
             $cartdetail->save();
         }
-        $product = Product::find($id);
         $product->stock -= $request->quantity;
         $product->save();
 
         return redirect()->back();
     }
-
     public function confirm()
     {
         $cart = Auth::user()->cart;
-        $order = new Order();
         $totalPrice = 0;
         foreach ($cart->cartDetails as $details) {
-            $totalPrice += $details->quantity;
+            $totalPrice += ($details->quantity * $details->product->price);
         }
+
+        $order = new Order();
         $order->user_id = Auth::id();
         $order->price = $totalPrice;
         $order->date = Carbon::now();
@@ -65,8 +68,8 @@ class CartController extends Controller
         foreach ($cart->cartDetails as $details) {
             $orderdetail = new OrderDetail();
             $orderdetail->order_id = $order->id;
-            $orderdetail->cart_detail_id = $details->id;
-
+            $orderdetail->product_id = $details->product_id;
+            $orderdetail->quantity = $details->quantity;
             $orderdetail->save();
         }
 

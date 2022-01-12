@@ -50,7 +50,11 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return view('orders.show', compact('order'));
+        if ($order->user_id != Auth::id()) {
+            return redirect()->back();
+        }
+        $orderdetails = OrderDetail::with('product')->where('order_id', $order->id)->get();
+        return view('orders.show', compact('order', 'orderdetails'));
     }
 
     /**
