@@ -5631,6 +5631,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -5693,10 +5695,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Register",
   props: {
-    product: Object
+    product: Object,
+    token: [String, Number]
   },
   data: function data() {
     return {
@@ -5704,6 +5725,7 @@ __webpack_require__.r(__webpack_exports__);
       description: null,
       price: 0,
       stock: 0,
+      image: null,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute("content")
     };
   },
@@ -25849,142 +25871,176 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-form",
-    {
-      attrs: {
-        action: "/product/" + _vm.product.id,
-        method: "POST",
-        enctype: "multipart/form-data",
-      },
-    },
+    "v-container",
     [
-      _c("v-text-field", {
-        attrs: { type: "hidden", name: "_token", value: _vm.csrf },
-      }),
-      _vm._v(" "),
-      _c("v-text-field", {
-        attrs: { type: "hidden", name: "_method", value: "PUT" },
-      }),
-      _vm._v(" "),
       _c(
-        "v-container",
+        "v-form",
+        {
+          attrs: {
+            action: "/product/" + _vm.product.id,
+            method: "POST",
+            enctype: "multipart/form-data",
+          },
+        },
         [
+          _c("v-text-field", {
+            attrs: { type: "hidden", name: "_token", value: _vm.csrf },
+          }),
+          _vm._v(" "),
+          _c("v-text-field", {
+            attrs: { type: "hidden", name: "_method", value: "PUT" },
+          }),
+          _vm._v(" "),
           _c(
-            "v-row",
+            "v-container",
             [
               _c(
-                "v-col",
-                { attrs: { cols: "12", md: "6" } },
+                "v-row",
                 [
-                  _c("v-text-field", {
-                    attrs: { label: "Name", name: "name", required: "" },
-                    model: {
-                      value: _vm.name,
-                      callback: function ($$v) {
-                        _vm.name = $$v
-                      },
-                      expression: "name",
-                    },
-                  }),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "12", md: "6" } },
+                    [
+                      _c("v-text-field", {
+                        attrs: { label: "Name", name: "name", required: "" },
+                        model: {
+                          value: _vm.name,
+                          callback: function ($$v) {
+                            _vm.name = $$v
+                          },
+                          expression: "name",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "12", md: "6" } },
+                    [
+                      _c("v-text-field", {
+                        attrs: {
+                          label: "Price",
+                          name: "price",
+                          type: "number",
+                          min: "0",
+                          step: ".01",
+                          required: "",
+                        },
+                        model: {
+                          value: _vm.price,
+                          callback: function ($$v) {
+                            _vm.price = $$v
+                          },
+                          expression: "price",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "12", md: "6" } },
+                    [
+                      _c("v-text-field", {
+                        attrs: {
+                          label: "Stock",
+                          name: "stock",
+                          type: "number",
+                          min: "0",
+                          required: "",
+                        },
+                        model: {
+                          value: _vm.stock,
+                          callback: function ($$v) {
+                            _vm.stock = $$v
+                          },
+                          expression: "stock",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "12", md: "12" } },
+                    [
+                      _c("v-textarea", {
+                        attrs: {
+                          label: "Description",
+                          name: "description",
+                          required: "",
+                        },
+                        model: {
+                          value: _vm.description,
+                          callback: function ($$v) {
+                            _vm.description = $$v
+                          },
+                          expression: "description",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    { attrs: { type: "submit" } },
+                    [_c("v-icon", [_vm._v("edit")]), _vm._v("Edit")],
+                    1
+                  ),
                 ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-col",
-                { attrs: { cols: "12", md: "6" } },
-                [
-                  _c("v-file-input", {
-                    attrs: {
-                      accept: "image/*",
-                      name: "image",
-                      label: "Picture",
-                    },
-                  }),
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-col",
-                { attrs: { cols: "12", md: "6" } },
-                [
-                  _c("v-text-field", {
-                    attrs: {
-                      label: "Price",
-                      name: "price",
-                      type: "number",
-                      min: "0",
-                      step: ".01",
-                      required: "",
-                    },
-                    model: {
-                      value: _vm.price,
-                      callback: function ($$v) {
-                        _vm.price = $$v
-                      },
-                      expression: "price",
-                    },
-                  }),
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-col",
-                { attrs: { cols: "12", md: "6" } },
-                [
-                  _c("v-text-field", {
-                    attrs: {
-                      label: "Stock",
-                      name: "stock",
-                      type: "number",
-                      min: "0",
-                      required: "",
-                    },
-                    model: {
-                      value: _vm.stock,
-                      callback: function ($$v) {
-                        _vm.stock = $$v
-                      },
-                      expression: "stock",
-                    },
-                  }),
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-col",
-                { attrs: { cols: "12", md: "12" } },
-                [
-                  _c("v-textarea", {
-                    attrs: {
-                      label: "Description",
-                      name: "description",
-                      required: "",
-                    },
-                    model: {
-                      value: _vm.description,
-                      callback: function ($$v) {
-                        _vm.description = $$v
-                      },
-                      expression: "description",
-                    },
-                  }),
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                { attrs: { type: "submit" } },
-                [_c("v-icon", [_vm._v("edit")]), _vm._v("Edit")],
                 1
               ),
             ],
             1
           ),
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-form",
+        {
+          attrs: {
+            action: "/product/" + _vm.product.id + "/picture",
+            method: "POST",
+            enctype: "multipart/form-data",
+          },
+        },
+        [
+          _c("v-img", {
+            staticClass: "mx-auto mt-6",
+            attrs: {
+              "max-height": "100",
+              "max-width": "100",
+              src: "/storage/" + _vm.product.cover_path,
+            },
+          }),
+          _vm._v(" "),
+          _c("v-text-field", {
+            attrs: { type: "hidden", name: "_token", value: _vm.csrf },
+          }),
+          _vm._v(" "),
+          _c("v-text-field", {
+            attrs: { type: "hidden", name: "_method", value: "PUT" },
+          }),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            { attrs: { cols: "12", md: "6" } },
+            [
+              _c("v-file-input", {
+                attrs: { accept: "image/*", name: "image", label: "Picture" },
+              }),
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("v-btn", { attrs: { type: "submit" } }, [_vm._v("Edit Picture")]),
         ],
         1
       ),

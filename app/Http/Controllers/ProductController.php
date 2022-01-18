@@ -77,9 +77,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        if($product->shop->id != Auth::user()->shop->id){
+        if ($product->shop->id != Auth::user()->shop->id) {
             return redirect()->back();
         }
+
         return view('products.edit', compact('product'));
     }
 
@@ -90,22 +91,14 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function updatePicture(Request $request, Product $product)
     {
-        if($product->shop->id != Auth::user()->shop->id){
+        if ($product->shop->id != Auth::user()->shop->id) {
             return redirect()->back();
         }
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'max:300'],
-            'price' => ['numeric', 'min:0', 'max:200'],
-            'stock' => ['numeric', 'min:0', 'max:1000'],
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->stock = $request->stock;
         if ($request->image != null) {
             if (Storage::exists($product->cover_path) && $product->cover_path != "mockup.jpg") {
                 Storage::delete($product->cover_path);
@@ -113,6 +106,26 @@ class ProductController extends Controller
             $filename = Storage::disk('public')->put('', $request->image);
             $product->cover_path = $filename;
         }
+        $product->save();
+
+        return redirect()->back();
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        if ($product->shop->id != Auth::user()->shop->id) {
+            return redirect()->back();
+        }
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:300'],
+            'price' => ['numeric', 'min:0', 'max:200'],
+            'stock' => ['numeric', 'min:0', 'max:1000'],
+        ]);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
         $product->shop_id = Auth::user()->shop->id;
         $product->save();
 
@@ -127,7 +140,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        if($product->shop->id != Auth::user()->shop->id){
+        if ($product->shop->id != Auth::user()->shop->id) {
             return redirect()->back();
         }
         $product->delete();

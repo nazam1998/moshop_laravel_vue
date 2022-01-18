@@ -20,7 +20,7 @@ use App\Models\Shop;
 
 Route::get('/', function () {
     $shop = Shop::where('public', true)->with('products')->first();
-    
+
     return view('app', compact('shop'));
 });
 
@@ -28,6 +28,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::put('/product/{product}/picture', [ProductController::class, 'updatePicture'])->middleware(['auth']);
 Route::put('/profile/{profile}/picture', [ProfileController::class, 'updatePicture'])->middleware(['auth']);
 Route::get('/cart', [CartController::class, 'index'])->middleware(['auth']);
 Route::get('/cart/confirm', [CartController::class, 'confirm'])->middleware(['auth']);
